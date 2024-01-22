@@ -1,0 +1,15 @@
+.postgres-data/
+.redis-data/
+
+node_modules/
+
+dist/
+.tsbuildinfo
+
+*.pem
+.env*
+!/.env.example
+
+*.log
+
+uploads/

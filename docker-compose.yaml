@@ -1,0 +1,48 @@
+# to pass ssl certs for production, we use secrets instead of mounting volumes
+secrets:
+  ssl_cert:
+    file: ${SSL_CERT_FILE} # read from .env
+  ssl_key:
+    file: ${SSL_KEY_FILE} # read from .env
+
+services:
+  express-prod:
+    build:
+      context: .
+      dockerfile: prod.dockerfile
+    ports:
+      - 443:443
+    volumes:
+      - ./uploads:/app/uploads
+    env_file: .env
+    environment:
+      SERVER_PORT: 443 # override .env file to ensure server is running on port 443
+      SSL_CERT_FILE: /run/secrets/ssl_cert
+      SSL_KEY_FILE: /run/secrets/ssl_key
+    secrets:
+      - ssl_cert
+      - ssl_key
+
+  express-dev:
+    build:
+      context: .
+      dockerfile: dev.dockerfile
+    tty: true # keep container running
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+      - /tmp/tmux-1000/default:/tmp/tmux-1000/default # to forwarding system clipboard from inside container to localhost
+    ports:
+      - 3000:3000
+
+  postgres-dev:
+    image: postgres:alpine
+    env_file: .env
+    volumes:
+      - ./.postgres-data:/var/lib/postgresql/data
+
+  redis-dev:
+    image: redis:alpine
+    env_file: .env
+    volumes:
+      - ./.redis-data:/data
