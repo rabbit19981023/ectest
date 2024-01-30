@@ -18,7 +18,9 @@
 - 自行手刻的簡易Guard, Validator模組(實作細節位於`src/core`)，允許開發者用簡單明瞭的API界面，一次替各個不同的controller做使用者權限與資料欄位驗證(使用方式可參考`src/photo/route.ts`, `src/photo/guard.ts`, `src/photo/validator.ts`)
 - 實作Albums的CRUD
 - 實作Photos的CRUD，允許上傳/下載相片
-- 允許使用者一次下載相簿裡的所有相片，並善用串流程式設計，一邊壓縮檔案一邊將結果串流給使用者下載，最大化效能的同時，也省去先將壓縮結果儲存於硬碟空間後再刪除的多餘操作
+- 實現串流程式設計，在最大化效能的同時，也省去須先建立暫時檔案後再將其刪除的多餘操作
+  - 自行實現Buffer與Stream機制來上傳相片
+  - 允許使用者一次下載相簿裡的所有相片，並一邊壓縮檔案一邊將結果串流給使用者下載
 - 在新增相片時，允許使用者一次上傳多張相片，並使用批次寫入增進資料庫效能
 - 簡易Logger，http-logging實作(`src/logger.ts`, `src/middlewares/http-logging.ts`)
 
