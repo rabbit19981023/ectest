@@ -1,9 +1,9 @@
 import { and, eq } from "drizzle-orm";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import type { File } from "formidable";
 import fs from "fs/promises";
 import path from "path";
 import { db } from "../db";
+import type { File } from "../middlewares/upload-parser";
 import { albums, type Album } from "../album/schema";
 import { photos, PHOTO_COLUMNS, type Photo } from "./schema";
 
@@ -50,12 +50,12 @@ export class Service {
     descriptions: { [originFilename in string]: string }
   ): Promise<Photo[]> {
     const uploadFiles: UploadFile[] = [];
-    const moveTasks: Array<Promise<void>> = [];
+    const uploadTasks: Array<Promise<void>> = [];
     const uploadDir = `uploads/user_${userId}/album_${albumId}`;
 
     await fs.mkdir(uploadDir, { recursive: true });
 
-    for (const { filepath, originalFilename, newFilename } of files) {
+    for (const { originalFilename, newFilename, chunks } of files) {
       const uploadPath = `${uploadDir}/${newFilename}`;
       const uploadFile: UploadFile = { path: uploadPath };
       const description = descriptions[originalFilename!];
@@ -63,10 +63,10 @@ export class Service {
       if (description !== undefined) uploadFile.description = description;
 
       uploadFiles.push(uploadFile);
-      moveTasks.push(this.moveFile(filepath, uploadPath));
+      uploadTasks.push(this.pipeFile(chunks, uploadPath));
     }
 
-    await Promise.all(moveTasks);
+    await Promise.all(uploadTasks);
 
     const createDto: CreateDTO[] = uploadFiles.map((file) => ({
       albumId,
@@ -90,11 +90,11 @@ export class Service {
 
     // update the photo file
     if (uploadFile !== undefined) {
-      const { filepath, newFilename } = uploadFile;
+      const { newFilename, chunks } = uploadFile;
       const photoDir = path.dirname(photoPath);
       const newPath = `${photoDir}/${newFilename}`;
 
-      await this.moveFile(filepath, newPath);
+      await this.pipeFile(chunks, newPath);
       await fs.unlink(photoPath);
 
       updateDto.path = newPath;
@@ -129,9 +129,14 @@ export class Service {
     return rows[0] ?? null;
   }
 
-  private async moveFile(oldPath: string, newPath: string): Promise<void> {
-    await fs.copyFile(oldPath, newPath);
-    await fs.unlink(oldPath);
+  private async pipeFile(chunks: Buffer[], path: string): Promise<void> {
+    const file = await fs.open(path, "w");
+
+    for await (const chunk of chunks) {
+      await file.write(chunk);
+    }
+
+    await file.close();
   }
 }
 

@@ -1,5 +1,5 @@
-import { PersistentFile, type File } from "formidable";
 import { Validator } from "../core";
+import type { File } from "../middlewares/upload-parser";
 
 export type Action = keyof (typeof validator)["validations"];
 export const validator = new Validator({
@@ -36,7 +36,7 @@ export const validator = new Validator({
       files: (files?: File[]) => {
         return (
           files !== undefined &&
-          files.every((file) => file instanceof PersistentFile)
+          files.every((file) => file.chunks !== undefined)
         );
       },
       descriptions: (descriptions?: string[]) => {
@@ -52,7 +52,7 @@ export const validator = new Validator({
       file: (file?: File[]) => {
         return (
           file === undefined ||
-          (file.length === 1 && file[0] instanceof PersistentFile)
+          (file.length === 1 && file[0]?.chunks !== undefined)
         );
       },
       description: (description?: string[]) => {

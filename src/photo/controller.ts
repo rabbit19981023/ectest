@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import type { File } from "formidable";
 import { StatusCode, StatusPhrase } from "../enums";
+import type { File } from "../middlewares/upload-parser";
 import {
   service as albumService,
   type Service as AlbumService,
