@@ -16,6 +16,7 @@ services:
       - ./uploads:/app/uploads
     env_file: .env
     environment:
+      NODE_ENV: production # override .env file to ensure server is running in production mode
       SERVER_PORT: 443 # override .env file to ensure server is running on port 443
       SSL_CERT_FILE: /run/secrets/ssl_cert
       SSL_KEY_FILE: /run/secrets/ssl_key
