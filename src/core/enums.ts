@@ -1,3 +1,10 @@
+export enum Method {
+  GET = "get",
+  POST = "post",
+  PUT = "put",
+  DELETE = "delete",
+}
+
 export enum StatusCode {
   Ok = 200,
   Created = 201,

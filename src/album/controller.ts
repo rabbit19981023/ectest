@@ -1,14 +1,26 @@
 import type { Request, Response } from "express";
-import { StatusCode, StatusPhrase } from "../enums";
-import { service, type Service } from "./service";
+import {
+  Inject,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  RequireLogin,
+  Validate,
+  isNotEmpty,
+  isInt,
+  StatusCode,
+  StatusPhrase,
+} from "../core";
+import { AlbumService } from "./service";
 
-export class Controller {
-  private readonly service: Service;
+@Controller("/albums")
+export class AlbumController {
+  @Inject(AlbumService) private readonly service!: AlbumService;
 
-  constructor(service: Service) {
-    this.service = service;
-  }
-
+  @Get("/")
+  @RequireLogin()
   public async findAll(req: Request, res: Response): Promise<void> {
     res.status(StatusCode.Ok).json({
       status: StatusPhrase.Ok,
@@ -16,6 +28,9 @@ export class Controller {
     });
   }
 
+  @Get("/:id")
+  @RequireLogin()
+  @Validate({ params: { id: isInt } })
   public async find(req: Request, res: Response): Promise<void> {
     const id = parseInt(req.params["id"]!);
     const album = await this.service.find(id);
@@ -33,6 +48,9 @@ export class Controller {
     res.status(StatusCode.Ok).json({ status: StatusPhrase.Ok, album });
   }
 
+  @Post("")
+  @RequireLogin()
+  @Validate({ body: { title: isNotEmpty } })
   public async create(req: Request, res: Response): Promise<void> {
     const created = await this.service.create({
       title: req.body.title,
@@ -44,6 +62,9 @@ export class Controller {
       .json({ status: StatusPhrase.Created, created: created.id });
   }
 
+  @Put("/:id")
+  @RequireLogin()
+  @Validate({ params: { id: isInt }, body: { title: isNotEmpty } })
   public async update(req: Request, res: Response): Promise<void> {
     const id = parseInt(req.params["id"]!);
     const album = await this.service.find(id);
@@ -66,6 +87,9 @@ export class Controller {
     });
   }
 
+  @Delete("/:id")
+  @RequireLogin()
+  @Validate({ params: { id: isInt } })
   public async delete(req: Request, res: Response): Promise<void> {
     const id = parseInt(req.params["id"]!);
     const album = await this.service.find(id);
@@ -88,5 +112,3 @@ export class Controller {
     });
   }
 }
-
-export const controller = new Controller(service);

@@ -1,31 +1,29 @@
 import type { Request, Response, NextFunction } from "express";
-import { StatusCode, StatusPhrase } from "../../enums";
-import { logger } from "../../logger";
 import {
-  service as albumService,
-  type Service as AlbumService,
-} from "../../album/service";
-import {
-  service as photoService,
-  type Service as PhotoService,
-} from "../service";
-import { service, type Service } from "./service";
+  Inject,
+  Controller,
+  Get,
+  RequireLogin,
+  Validate,
+  isInt,
+  Logger,
+  StatusCode,
+  StatusPhrase,
+} from "../../core";
+import { AlbumService } from "../../album";
+import { PhotoService } from "../service";
+import { DownloadService } from "./service";
 
-export class Controller {
-  private readonly albumService: AlbumService;
-  private readonly photoService: PhotoService;
-  private readonly service: Service;
+@Controller("/download/albums/:albumId/photos")
+export class DownloadController {
+  @Inject(Logger) private readonly logger!: Logger;
+  @Inject(AlbumService) private readonly albumService!: AlbumService;
+  @Inject(PhotoService) private readonly photoService!: PhotoService;
+  @Inject(DownloadService) private readonly service!: DownloadService;
 
-  constructor(
-    albumService: AlbumService,
-    photoService: PhotoService,
-    service: Service
-  ) {
-    this.albumService = albumService;
-    this.photoService = photoService;
-    this.service = service;
-  }
-
+  @Get("/")
+  @RequireLogin()
+  @Validate({ params: { albumId: isInt } })
   public async downloadAll(
     req: Request,
     res: Response,
@@ -49,7 +47,7 @@ export class Controller {
 
     archive
       .on("warning", (warns) => {
-        logger.warn({ warns });
+        this.logger.warn({ warns });
       })
       .on("error", (error) => {
         next(error);
@@ -62,6 +60,9 @@ export class Controller {
     await archive.finalize();
   }
 
+  @Get("/:id")
+  @RequireLogin()
+  @Validate({ params: { albumId: isInt, id: isInt } })
   public async download(
     req: Request,
     res: Response,
@@ -86,5 +87,3 @@ export class Controller {
     });
   }
 }
-
-export const controller = new Controller(albumService, photoService, service);

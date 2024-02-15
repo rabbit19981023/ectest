@@ -1,4 +1,6 @@
-import { serial, pgTable, text, integer, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, integer, timestamp } from "drizzle-orm/pg-core";
+
+// esbuild doesn't support standard decorators yet, so we cannot import from "../user"
 import { users } from "../user/schema";
 
 export const albums = pgTable("albums", {

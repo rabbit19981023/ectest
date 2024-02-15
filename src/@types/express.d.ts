@@ -1,4 +1,4 @@
-import type { UserWithoutPassword } from "../user/schema";
+import type { UserWithoutPassword } from "../user";
 
 declare global {
   declare namespace Express {

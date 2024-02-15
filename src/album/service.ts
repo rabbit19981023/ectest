@@ -1,18 +1,14 @@
 import { eq } from "drizzle-orm";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import { db } from "../db";
-import { aggregateOne2Many } from "../core";
-import { photos, type Photo } from "../photo/schema";
+import { Inject, Injectable, DrizzleOrm, aggregateOne2Many } from "../core";
+import { photos, type Photo } from "../photo";
 import { albums, type Album } from "./schema";
 
 type AlbumWithPhotos = Album & { photos: Photo[] };
 
-export class Service {
-  private readonly db: PostgresJsDatabase;
-
-  constructor(db: PostgresJsDatabase) {
-    this.db = db;
-  }
+@Injectable()
+export class AlbumService {
+  @Inject(DrizzleOrm) private readonly db!: PostgresJsDatabase;
 
   public async findAll(userId: number): Promise<AlbumWithPhotos[]> {
     const rows = await this.db
@@ -76,5 +72,3 @@ type CreateDTO = {
 type UpdateDTO = {
   title: string;
 };
-
-export const service = new Service(db);

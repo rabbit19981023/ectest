@@ -1,5 +1,8 @@
-import { logger } from "./logger";
-import { Server } from "./server";
+// middlewares & controllers must be imported before `Server`
+import "./middlewares";
+import "./controllers";
+
+import { Server } from "./core";
 
 function bootstrap(): void {
   const host = process.env["SERVER_HOST"]!;
@@ -7,7 +10,6 @@ function bootstrap(): void {
   const server = new Server();
 
   server.listen(host, port).catch((error) => {
-    logger.error({ error });
     throw error;
   });
 }

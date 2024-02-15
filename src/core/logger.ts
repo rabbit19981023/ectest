@@ -1,3 +1,5 @@
+import { Injectable } from "./decorators";
+
 enum LEVEL {
   Error,
   Warn,
@@ -7,26 +9,24 @@ enum LEVEL {
 
 type Msg = Record<string, any>;
 
-class Logger {
-  private readonly level: LEVEL;
+@Injectable()
+export class Logger {
+  private readonly level =
+    LEVEL[process.env["LOGGER_LEVEL"] as keyof typeof LEVEL];
 
-  constructor(level: LEVEL) {
-    this.level = level;
-  }
-
-  error(msg: Msg): void {
+  public error(msg: Msg): void {
     this.log(LEVEL.Error, msg);
   }
 
-  warn(msg: Msg): void {
+  public warn(msg: Msg): void {
     this.log(LEVEL.Warn, msg);
   }
 
-  info(msg: Msg): void {
+  public info(msg: Msg): void {
     this.log(LEVEL.Info, msg);
   }
 
-  debug(msg: Msg): void {
+  public debug(msg: Msg): void {
     this.log(LEVEL.Debug, msg);
   }
 
@@ -48,7 +48,3 @@ class Logger {
       .split(".")[0]!;
   }
 }
-
-export const logger = new Logger(
-  LEVEL[process.env["LOGGER_LEVEL"] as keyof typeof LEVEL]
-);

@@ -1,5 +1,7 @@
 import { getTableColumns } from "drizzle-orm";
-import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, integer, serial, text, timestamp } from "drizzle-orm/pg-core";
+
+// esbuild doesn't support standard decorators yet, so we cannot import from "../album"
 import { albums } from "../album/schema";
 
 export const photos = pgTable("photos", {

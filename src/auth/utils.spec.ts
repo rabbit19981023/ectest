@@ -1,18 +1,18 @@
 import { describe, test, expect } from "vitest";
-import { Validator } from "./validator";
+import { isRole, isEmail, isPassword } from "./utils";
 
 describe("isRole", () => {
   test("value of enum ROLE: should return true", () => {
-    expect(Validator.isRole("user")).toBeTruthy();
-    expect(Validator.isRole("admin")).toBeTruthy();
+    expect(isRole("user")).toBeTruthy();
+    expect(isRole("admin")).toBeTruthy();
   });
 
   test("undefined: should return true (if undefined, use default value )", () => {
-    expect(Validator.isRole(undefined)).toBeTruthy();
+    expect(isRole(undefined)).toBeTruthy();
   });
 
   test("not the value of enum ROLE: should return false", () => {
-    expect(Validator.isRole("unknown role")).toBeFalsy();
+    expect(isRole("unknown role")).toBeFalsy();
   });
 });
 
@@ -21,45 +21,45 @@ describe("isEmail", () => {
     const emails = ["user01@mail", "user01@mail.com", "user01@main.com.tw"];
 
     for (const email of emails) {
-      expect(Validator.isEmail(email)).toBeTruthy();
+      expect(isEmail(email)).toBeTruthy();
     }
   });
 
   test("undefined: should return false", () => {
-    expect(Validator.isEmail(undefined)).toBeFalsy();
+    expect(isEmail(undefined)).toBeFalsy();
   });
 
   test("invalid format: should return false", () => {
     const emails = ["user01", "user01mail", "user01mail.com", "user01@ma"];
 
     for (const email of emails) {
-      expect(Validator.isEmail(email)).toBeFalsy();
+      expect(isEmail(email)).toBeFalsy();
     }
   });
 });
 
 describe("isPassword", () => {
   test("should >= 8 characters, and include at least 1 capital, lower, and number", () => {
-    expect(Validator.isPassword("Passw0rd")).toBeTruthy();
+    expect(isPassword("Passw0rd")).toBeTruthy();
   });
 
   test("undefined: should return false", () => {
-    expect(Validator.isPassword(undefined)).toBeFalsy();
+    expect(isPassword(undefined)).toBeFalsy();
   });
 
   test("< 8 characters: should return false", () => {
-    expect(Validator.isPassword("Passw0r")).toBeFalsy();
+    expect(isPassword("Passw0r")).toBeFalsy();
   });
 
   test("no capital: should return false", () => {
-    expect(Validator.isPassword("passw0rd")).toBeFalsy();
+    expect(isPassword("passw0rd")).toBeFalsy();
   });
 
   test("no lower case: should return false", () => {
-    expect(Validator.isPassword("PASSW8RD")).toBeFalsy();
+    expect(isPassword("PASSW8RD")).toBeFalsy();
   });
 
   test("no number: should return false", () => {
-    expect(Validator.isPassword("Password")).toBeFalsy();
+    expect(isPassword("Password")).toBeFalsy();
   });
 });

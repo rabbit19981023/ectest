@@ -2,22 +2,18 @@ import type { RequestHandler } from "express";
 import passport from "passport";
 import { Strategy as LocalStrategy, type IVerifyOptions } from "passport-local";
 import bcrypt from "bcrypt";
-import { logger } from "../logger";
-import type { UserWithoutPassword } from "../user/schema";
-import {
-  service as userService,
-  type Service as UserService,
-} from "../user/service";
-import { AuthStrategy, AuthMessage, AuthError } from "../enums";
+import { Inject, Injectable, Logger } from "../core";
+import { UserService, type UserWithoutPassword } from "../user";
+import { AuthStrategy, AuthMessage, AuthError } from "./enums";
 
+@Injectable()
 export class Authenticator {
-  private readonly passport: passport.Authenticator;
-  private readonly userService: UserService;
+  private readonly passport = new passport.Passport();
 
-  constructor(passport: passport.Authenticator, userService: UserService) {
-    this.passport = passport;
-    this.userService = userService;
+  @Inject(Logger) private readonly logger!: Logger;
+  @Inject(UserService) private readonly userService!: UserService;
 
+  constructor() {
     this.initSerializer().registerStrategies();
   }
 
@@ -40,7 +36,7 @@ export class Authenticator {
     // eslint-disable-next-line
     // @ts-ignore
     this.passport.serializeUser((user: UserWithoutPassword, done) => {
-      logger.info({
+      this.logger.info({
         msg: AuthMessage.NewSession,
         user,
       });
@@ -73,7 +69,7 @@ export class Authenticator {
             const { password: _, ...userWithoutPassword } = user;
 
             if (await bcrypt.compare(password, user.password)) {
-              logger.info({
+              this.logger.info({
                 msg: AuthMessage.LoginSuccess,
                 user: userWithoutPassword,
               });
@@ -82,7 +78,7 @@ export class Authenticator {
               return;
             }
 
-            logger.warn({
+            this.logger.warn({
               msg: AuthMessage.LoginFail,
               reason: AuthError.WrongPassword,
               user: userWithoutPassword,
@@ -92,7 +88,7 @@ export class Authenticator {
             return;
           }
 
-          logger.warn({
+          this.logger.warn({
             msg: AuthMessage.LoginFail,
             reason: AuthError.UserNotExists,
             email,
@@ -119,7 +115,7 @@ export class Authenticator {
           const { role } = req.body;
 
           if ((await this.userService.find(email)) !== null) {
-            logger.warn({
+            this.logger.warn({
               msg: AuthMessage.SignupFail,
               reason: AuthError.UserAlreadyExists,
               email,
@@ -135,7 +131,7 @@ export class Authenticator {
             role,
           });
 
-          logger.info({
+          this.logger.info({
             msg: AuthMessage.SignupSuccess,
             newUser,
           });
@@ -148,8 +144,3 @@ export class Authenticator {
     return this;
   }
 }
-
-export const authenticator = new Authenticator(
-  new passport.Passport(),
-  userService
-);

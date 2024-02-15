@@ -1,21 +1,31 @@
 import type { Request, Response } from "express";
-import { StatusCode, StatusPhrase } from "../enums";
-import type { File } from "../middlewares/upload-parser";
 import {
-  service as albumService,
-  type Service as AlbumService,
-} from "../album/service";
-import { service, type Service } from "./service";
+  Inject,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Use,
+  RequireLogin,
+  Validate,
+  isInt,
+  isJson,
+  StatusCode,
+  StatusPhrase,
+} from "../core";
+import { AlbumService } from "../album";
+import { PhotoService } from "./service";
+import { uploadParser, type File } from "./upload-parser";
 
-export class Controller {
-  private readonly albumService: AlbumService;
-  private readonly service: Service;
+@Controller("/albums/:albumId/photos")
+export class PhotoController {
+  @Inject(AlbumService) private readonly albumService!: AlbumService;
+  @Inject(PhotoService) private readonly service!: PhotoService;
 
-  constructor(albumService: AlbumService, service: Service) {
-    this.albumService = albumService;
-    this.service = service;
-  }
-
+  @Get("/")
+  @RequireLogin()
+  @Validate({ params: { albumId: isInt } })
   public async findAll(req: Request, res: Response): Promise<void> {
     const albumId = parseInt(req.params["albumId"]!);
     const photos = await this.service.findAll(albumId);
@@ -28,6 +38,9 @@ export class Controller {
     res.status(StatusCode.Ok).json({ status: StatusPhrase.Ok, photos });
   }
 
+  @Get("/:id")
+  @RequireLogin()
+  @Validate({ params: { albumId: isInt, id: isInt } })
   public async find(req: Request, res: Response): Promise<void> {
     const albumId = parseInt(req.params["albumId"]!);
     const photoId = parseInt(req.params["id"]!);
@@ -46,6 +59,26 @@ export class Controller {
     res.status(StatusCode.Ok).json({ status: StatusPhrase.Ok, photo });
   }
 
+  @Post("/")
+  @RequireLogin()
+  @Validate({ params: { albumId: isInt } })
+  @Use(uploadParser())
+  @Validate({
+    body: {
+      files: (files?: File[]) => {
+        return (
+          files !== undefined &&
+          files.every((file) => file.chunks !== undefined)
+        );
+      },
+      descriptions: (descriptions?: string[]) => {
+        return (
+          descriptions === undefined ||
+          (descriptions.length === 1 && isJson(descriptions[0]))
+        );
+      },
+    },
+  })
   public async create(req: Request, res: Response): Promise<void> {
     const userId = req.user!.id;
     const albumId = parseInt(req.params["albumId"]!);
@@ -78,6 +111,26 @@ export class Controller {
     });
   }
 
+  @Put("/:id")
+  @RequireLogin()
+  @Validate({ params: { albumId: isInt, id: isInt } })
+  @Use(uploadParser())
+  @Validate({
+    body: {
+      file: (file?: File[]) => {
+        return (
+          file === undefined ||
+          (file.length === 1 && file[0]?.chunks !== undefined)
+        );
+      },
+      description: (description?: string[]) => {
+        return (
+          description === undefined ||
+          (description.length === 1 && !isJson(description[0]))
+        );
+      },
+    },
+  })
   public async update(req: Request, res: Response): Promise<void> {
     const userId = req.user!.id;
     const albumId = parseInt(req.params["albumId"]!);
@@ -105,6 +158,9 @@ export class Controller {
       .json({ status: StatusPhrase.Ok, updated: updated!.id });
   }
 
+  @Delete("/:id")
+  @RequireLogin()
+  @Validate({ params: { albumId: isInt, id: isInt } })
   public async delete(req: Request, res: Response): Promise<void> {
     const albumId = parseInt(req.params["albumId"]!);
     const photoId = parseInt(req.params["id"]!);
@@ -127,5 +183,3 @@ export class Controller {
       .json({ status: StatusPhrase.Ok, deleted: deleted!.id });
   }
 }
-
-export const controller = new Controller(albumService, service);

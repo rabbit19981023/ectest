@@ -30,3 +30,26 @@ export function aggregateOne2Many<
     [many]: row.many,
   }));
 }
+
+export function isNotEmpty(value?: string): boolean {
+  return value !== undefined;
+}
+
+export function isInt(value?: string): boolean {
+  return Number.isInteger(Number(value));
+}
+
+export function isJson(value?: string): boolean {
+  if (value === undefined) return false;
+
+  try {
+    const json = JSON.parse(value);
+
+    if (typeof json !== "object") return false;
+    if (json === null) return false;
+  } catch (err) {
+    return false;
+  }
+
+  return true;
+}

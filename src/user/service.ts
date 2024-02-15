@@ -1,20 +1,17 @@
-import { eq } from "drizzle-orm";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import { db } from "../db";
-import type { ROLE } from "../enums";
+import { eq } from "drizzle-orm";
+import { Inject, Injectable, DrizzleOrm } from "../core";
 import {
   users,
   NON_PASSWORD_COLUMNS,
+  type ROLE,
   type User,
   type UserWithoutPassword,
 } from "./schema";
 
-export class Service {
-  private readonly db: PostgresJsDatabase;
-
-  constructor(db: PostgresJsDatabase) {
-    this.db = db;
-  }
+@Injectable()
+export class UserService {
+  @Inject(DrizzleOrm) private readonly db!: PostgresJsDatabase;
 
   public async findAll(): Promise<UserWithoutPassword[]> {
     return await this.db.select(NON_PASSWORD_COLUMNS).from(users);
@@ -39,7 +36,7 @@ export class Service {
   }
 
   public async create(createDTO: CreateDTO): Promise<UserWithoutPassword> {
-    const rows = await db
+    const rows = await this.db
       .insert(users)
       .values(createDTO)
       .returning(NON_PASSWORD_COLUMNS);
@@ -80,5 +77,3 @@ type UpdateDTO = {
   password?: string;
   role?: ROLE;
 };
-
-export const service = new Service(db);

@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { aggregateOne2Many } from "./utils";
+import { aggregateOne2Many, isNotEmpty, isInt, isJson } from "./utils";
 
 describe("aggregateOne2Many", () => {
   const dummy = {
@@ -127,5 +127,55 @@ describe("aggregateOne2Many", () => {
     ];
 
     expect(aggregateOne2Many(rows, "album", "photos")).toEqual(result);
+  });
+});
+
+describe("isNotEmpty", () => {
+  test("not empty: should return true", () => {
+    expect(isNotEmpty("not empty")).toBeTruthy();
+  });
+
+  test("undefined: should return false", () => {
+    expect(isNotEmpty(undefined)).toBeFalsy();
+  });
+});
+
+describe("isInt", () => {
+  test("int: should return true", () => {
+    expect(isInt("57")).toBeTruthy();
+  });
+
+  test("undefined: should return false", () => {
+    expect(isInt(undefined)).toBeFalsy();
+  });
+
+  test("all char: should return false", () => {
+    expect(isInt("all char")).toBeFalsy();
+  });
+
+  test("float: should return false", () => {
+    expect(isInt("1.5")).toBeFalsy();
+  });
+
+  test("contains char: should return false", () => {
+    expect(isInt("5s")).toBeFalsy();
+  });
+});
+
+describe("isJson", () => {
+  test("empty object: should return true", () => {
+    expect(isJson("{}")).toBeTruthy();
+  });
+
+  test("valid format: should return true", () => {
+    expect(isJson('{"key": "value"}')).toBeTruthy();
+  });
+
+  test("undefined: should return false", () => {
+    expect(isJson(undefined)).toBeFalsy();
+  });
+
+  test("invalid format: should return false", () => {
+    expect(isJson("{'key': 'value'}")).toBeFalsy();
   });
 });

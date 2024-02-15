@@ -2,19 +2,16 @@ import { and, eq } from "drizzle-orm";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import fs from "fs/promises";
 import path from "path";
-import { db } from "../db";
-import type { File } from "../middlewares/upload-parser";
-import { albums, type Album } from "../album/schema";
+import { Inject, Injectable, DrizzleOrm } from "../core";
+import { albums, type Album } from "../album";
 import { photos, PHOTO_COLUMNS, type Photo } from "./schema";
+import type { File } from "./upload-parser";
 
 type PhotoWithAlbum = Photo & { album: Album };
 
-export class Service {
-  private readonly db: PostgresJsDatabase;
-
-  constructor(db: PostgresJsDatabase) {
-    this.db = db;
-  }
+@Injectable()
+export class PhotoService {
+  @Inject(DrizzleOrm) private readonly db!: PostgresJsDatabase;
 
   public async findAll(albumId: number): Promise<PhotoWithAlbum[]> {
     return await this.db
@@ -156,5 +153,3 @@ type UploadFile = {
   path: string;
   description?: string;
 };
-
-export const service = new Service(db);

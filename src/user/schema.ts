@@ -1,8 +1,12 @@
 import { getTableColumns } from "drizzle-orm";
-import { pgEnum, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
-import { ROLE } from "../enums";
+import { pgTable, pgEnum, serial, text, timestamp } from "drizzle-orm/pg-core";
 
-// pgEnum must be exported, or it will not generate create enum SQL clause for you
+export enum ROLE {
+  Admin = "admin",
+  User = "user",
+}
+
+// pgEnum must be exported, or it will not generate `create enum` SQL clause by drizzle-orm
 export const roleEnum = pgEnum("role", [ROLE.Admin, ROLE.User]);
 
 export const users = pgTable("users", {
