@@ -22,8 +22,8 @@
 - 實作Albums的CRUD
 - 實作Photos的CRUD，允許上傳/下載相片
 - 實現串流程式設計，在最大化效能的同時，也省去須先建立暫時檔案後再將其刪除的多餘操作
-  - 實現Buffer與Stream機制來上傳相片
-  - 允許使用者一次下載相簿裡的所有相片，並一邊壓縮檔案一邊將結果串流給使用者下載
+  - 實現Buffer與Stream機制來上傳相片(可參考`src/photo/upload-parser.ts`)
+  - 允許使用者一次下載相簿裡的所有相片，並一邊壓縮檔案一邊將結果串流給使用者下載(可參考`src/photo/download/`)
 - 在新增相片時，允許使用者一次上傳多張相片，並使用批次寫入增進資料庫效能
 - 實作簡易Logger、http-logging(`src/core/logger.ts`, `src/middlewares/http-logging.ts`)
 
