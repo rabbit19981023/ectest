@@ -54,6 +54,8 @@ export class Server {
   }
 
   private registerControllers(): this {
+    const apiRouter = express.Router();
+
     for (const [Controller, metadata] of CONTROLLERS) {
       // must create Controller instances to make decorators' `ctx.addInitializer` work
       // eslint-disable-next-line
@@ -67,12 +69,14 @@ export class Server {
         router[method!](path!, middlewares?.reverse() ?? [], handle!);
       }
 
-      this.app.use(path, router);
+      apiRouter.use(path, router);
 
       handlers.clear();
     }
 
     CONTROLLERS.clear();
+
+    this.app.use("/api/v1", apiRouter);
 
     return this;
   }
