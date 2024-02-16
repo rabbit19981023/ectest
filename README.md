@@ -257,7 +257,7 @@ descriptions: {
   "<filename 01>": "<description 01>",
   "<filename 02>": "<description 02>",
   ...
-} satisfies JSONString;
+} satisfies JSONString; # for example: {"1.jpg": "description 1", "2.jpg": "description 2"}
 ```
 
 Update a photo in specified album (login required):
@@ -268,9 +268,7 @@ Content-Type: multipart/form-data
 
 Body
 file?: File;
-description?: {
-  "<filename>": "<description>"
-} satisfies JSONString;
+description?: string;
 ```
 
 Delete a photo in specified album (login required):
