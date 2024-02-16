@@ -1,5 +1,5 @@
 {
-  "name": "ectest-express",
+  "name": "gallery-rest-api",
   "version": "0.0.1",
   "scripts": {
     "start": "npm run build && node --env-file=.env dist/main.js",

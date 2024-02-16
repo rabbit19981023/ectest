@@ -1,36 +1,39 @@
-# ECTEST Backend Exam
+# Gallery RESTful API Service
 
-本專案為應徵迅易檢測的後端項目，已完成所有必要與加分項目內容，包含：
+此專案起初是為了應徵某軟體公司的後端測試題目，然而該職缺很快就關閉了。於是決定來挑戰自己，將開發好的專案進行全面重構，採用將成為ECMAScript標準的裝飾器語法(目前已進入stage 3，且從TypeScript 5開始原生支援，詳情可見[tc39](https://github.com/tc39/proposal-decorators))，並應用各種開發和設計原則，在合理範圍內確保高水準的專案架構、程式碼品質和可讀性，同時也使得程式碼更容易擴充、修改和維護。
 
-- 整個過程**無使用**任何AI工具，包含但不限於：ChatGPT、Github Copilot等
+題目大致上為：開發一個管理使用者相簿的後端API服務，題目中所有必要、加分項目皆已完成。
+
+- 為測試自己的真實能力，100%獨立開發，且整個過程**無使用**任何AI工具，包含但不限於：ChatGPT、Github Copilot等
 - 使用docker提供一致、可進版控、開箱即用的系統環境，包含：正式環境(express)、開發環境(express, postgres, redis)
-- 100% TypeScript, 並適時使用泛型，在保證type safe的前提下使程式更靈活(可參考`src/core/utils.ts`, `src/core/guard.ts`, `src/core/validator.ts`)
-- 使用幾乎最嚴格的tsconfig規則，並搭配eslint/prettier，確保程式碼品質與一致的格式
-- 適時運用各種best practice, clean code, design pattern，確保專案架構/程式碼品質、可讀性、維護性、可測試性等
-- 使用dpdm.js檢查專案是否有循環引用問題(circular dependency)
+- 100% 使用ES6+語法
+- 100% TypeScript, 並適時運用泛型，使程式更嚴謹且靈活(可參考`src/core/utils.ts`)
+- 使用幾乎最嚴格的tsconfig規則，並搭配eslint/prettier，確保程式碼品質與格式的一致性
+- 適時應用各種best practice, clean code, design pattern等觀念，確保專案架構、程式碼品質、可讀性、維護性、可測試性等
+- 符合物件導向SOLID原則、並實現裝飾器、依賴注入、控制反轉等設計模式，使程式碼更簡潔，更容易擴充、修改、維護(寫法範例可參考`src/album/controller.ts`, 裝飾器實作細節位於`src/core/decorators/`)
+- 使用dpdm.js檢查是否存在循環引用問題(circular dependency)
 - RESTful風格的API端點
-- 對功能性函式撰寫單元測試
+- 對功能性函式撰寫單元測試(`src/core/utils.spec.ts`, `src/auth/utils.spec.ts`)
 - 使用helmet.js對Response Headers做基礎安全設定
 - 使用express-rate-limit保護API端點防止DDoS攻擊
-- 使用Drizzle ORM，在保證type safe的前提下，以非常接近SQL語法的方式操作資料庫(可參考`core/album/service.ts`)
+- 使用Drizzle ORM，在保證type safe的前提下，以非常接近SQL語法的方式操作資料庫(可參考`src/album/service.ts`)
 - 以Passport.js實作的登入註冊系統(實作細節位於`src/auth/authenticator.ts`)
 - 使用Redis作為SessionStore
-- 自行手刻的簡易Guard, Validator模組(實作細節位於`src/core`)，允許開發者用簡單明瞭的API界面，一次替各個不同的controller做使用者權限與資料欄位驗證(使用方式可參考`src/photo/route.ts`, `src/photo/guard.ts`, `src/photo/validator.ts`)
 - 實作Albums的CRUD
 - 實作Photos的CRUD，允許上傳/下載相片
 - 實現串流程式設計，在最大化效能的同時，也省去須先建立暫時檔案後再將其刪除的多餘操作
-  - 自行實現Buffer與Stream機制來上傳相片
+  - 實現Buffer與Stream機制來上傳相片
   - 允許使用者一次下載相簿裡的所有相片，並一邊壓縮檔案一邊將結果串流給使用者下載
 - 在新增相片時，允許使用者一次上傳多張相片，並使用批次寫入增進資料庫效能
-- 簡易Logger，http-logging實作(`src/logger.ts`, `src/middlewares/http-logging.ts`)
+- 實作簡易Logger、http-logging(`src/core/logger.ts`, `src/middlewares/http-logging.ts`)
 
 ## Usage
 
 1. clone & get into the project
 
 ```bash
-$ git clone https://github.com/rabbit19981023/ectest-express
-$ cd ectest-express
+$ git clone https://github.com/rabbit19981023/gallery-rest-api
+$ cd gallery-rest-api
 ```
 
 2. generate dev SSL certificates for localhost:
