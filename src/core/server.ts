@@ -61,7 +61,7 @@ export class Server {
       // eslint-disable-next-line
       new (Controller as Class)();
 
-      const router = express.Router();
+      const router = express.Router({ mergeParams: true });
       const { path, handlers } = metadata;
 
       for (const [, metadata] of handlers) {
