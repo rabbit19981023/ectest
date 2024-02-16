@@ -1,7 +1,7 @@
 # build stage
 FROM node:alpine AS build
 WORKDIR /build
-COPY . /build
+COPY . .
 RUN npm install
 RUN npm run type-check && \
   npm run lint && \
@@ -13,6 +13,6 @@ RUN npm run type-check && \
 FROM node:alpine AS production
 USER node
 WORKDIR /app
-COPY --from=build --chown=node:node /build/package.json /build/package-lock.json /build/dist /app
+COPY --from=build --chown=node:node /build/package.json /build/package-lock.json /build/dist .
 RUN npm install --omit=dev
 CMD ["node", "main.js"]
