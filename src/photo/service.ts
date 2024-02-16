@@ -69,8 +69,8 @@ export class PhotoService {
       albumId,
       ...file,
     }));
-    const rows = await this.db.insert(photos).values(createDto).returning();
-    return rows;
+
+    return await this.db.insert(photos).values(createDto).returning();
   }
 
   public async update(
