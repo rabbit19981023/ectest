@@ -26,7 +26,14 @@
 
 ## Usage
 
-Firstly, generate dev SSL certificates for localhost:
+1. clone & get into the project
+
+```bash
+$ git clone https://github.com/rabbit19981023/ectest-express
+$ cd ectest-express
+```
+
+2. generate dev SSL certificates for localhost:
 
 ```bash
 # we use mkcert for simply making locally-trusted dev certificates.
@@ -35,7 +42,7 @@ $ apt-get install mkcert
 # create trusted local CA
 $ mkcert -install
 
-# create certificates for localhost (run this script in project root)
+# create certificates for localhost
 $ mkcert localhost
 
 
@@ -45,13 +52,11 @@ Created a new certificate valid for the following names 📜
 The certificate is at "./localhost.pem" and the key at "./localhost-key.pem" ✅
 ```
 
-[**Recommended**] Using docker to simply setup our production-ready express server:
+### [**Recommended**] Setup with Docker
+
+Using docker to simply setup our services in just few steps:
 
 ```bash
-# clone to your machine
-$ git clone https://github.com/rabbit19981023/ectest-express
-$ cd ectest-express
-
 # use default environment variables (Even no need to modify! We have setup dev postgres & redis for you!)
 $ cp .env.example .env
 
@@ -59,7 +64,7 @@ $ cp .env.example .env
 # create uploads/ before running docker services to prevent volumes permission issues
 $ mkdir uploads
 
-# run all docker services in background
+# build & run all docker services in background
 $ docker compose up -d
 
 # run database migrations in dev server
@@ -101,10 +106,6 @@ $ docker compose down
 ### Setup without docker (requires Node.js v20.6.0+):
 
 ```bash
-# clone to your machine
-$ git clone https://github.com/rabbit19981023/ectest-express
-$ cd ectest-express
-
 # install dependencies
 $ npm i
 
@@ -124,11 +125,10 @@ $ npm ci --omit=dev
 $ node --env-file=.env dist/main.js
 ```
 
-
-Other useful scripts:
+### Other useful scripts:
 
 ```bash
-# build source & run server
+# build from source & run server
 $ npm run start
 
 # run dev server
