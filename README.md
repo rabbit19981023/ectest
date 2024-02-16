@@ -284,11 +284,11 @@ DELETE /api/v1/albums/:albumId/photos/:id
 Download all photos in specified album (login required):
 
 ```bash
-GET /download/albums/:albumId/photos
+GET /api/v1/download/albums/:albumId/photos
 ```
 
 Download one photo in specified album (login required):
 
 ```bash
-GET /download/albums/:albumId/photos/:id
+GET /api/v1/download/albums/:albumId/photos/:id
 ```
