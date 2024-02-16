@@ -22,7 +22,7 @@ export function Validate(
         if (!validate(value)) {
           res
             .status(StatusCode.BadRequest)
-            .json({ json: StatusPhrase.BadRequest });
+            .json({ status: StatusPhrase.BadRequest });
 
           return;
         }
