@@ -83,7 +83,7 @@ export class DownloadController {
     }
 
     res.download(photo.path, (error) => {
-      next(error);
+      if (error) next(error);
     });
   }
 }
