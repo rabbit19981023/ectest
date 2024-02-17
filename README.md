@@ -1,21 +1,21 @@
-# Gallery RESTful API Service
+# Gallery RESTful API
 
-此專案起初是應徵某軟體公司時，主管開出的後端測試題目，然而該職缺很快就關閉了。眼見專案已幾乎開發完成，於是心想那不如來挑戰一下自己，將專案進行全面重構，採用將成為ECMAScript標準的裝飾器語法(目前已進入stage 3，且從TypeScript 5開始原生支援，詳情可見[tc39](https://github.com/tc39/proposal-decorators))，並應用各種開發觀念和設計原則，在合理範圍內確保高品質的專案/程式碼架構、可讀性和可測試性，同時也使得程式碼更容易擴充、修改和維護。
+此專案起初是應徵某軟體公司時，主管開出的後端測試題目，然而該職缺很快就關閉了。眼見專案已幾乎開發完成，於是心想那不如來挑戰一下自己，將專案進行全面重構，採用將成為ECMAScript標準的裝飾器語法(目前已進入stage 3，且從TypeScript 5開始原生支援，詳情可見[tc39](https://github.com/tc39/proposal-decorators))，並應用各種開發觀念和設計原則，在合理範圍內確保高品質的專案/程式碼架構，同時也使程式碼變得更簡潔、更容易擴充、修改、維護。
 
 題目大致上為：開發一個管理使用者相簿的後端API服務，題目中所有必要、加分項目皆已完成。
 
-- 為測試自己的真實能力，100%獨立開發，且整個過程**無使用**任何AI工具，包含但不限於：ChatGPT、Github Copilot等
+- 為測試自己的真實能力，100%獨立開發，整個過程**無使用**任何AI工具，包含但不限於：ChatGPT、Github Copilot等
 - 使用docker提供一致、可進版控、開箱即用的系統環境，包含：正式環境(express)、開發環境(express, postgres, redis)
 - 100% 使用ES6+語法
 - 100% TypeScript, 並適時運用泛型，使程式更嚴謹且靈活(可參考`src/core/utils.ts`)
 - 使用幾乎最嚴格的tsconfig規則，並搭配eslint/prettier，確保程式碼品質與格式一致
-- 符合物件導向SOLID原則、並實現裝飾器、依賴注入等設計模式，使程式碼更簡潔，更容易擴充、修改、維護(寫法範例可參考`src/album/controller.ts`, 裝飾器實作細節位於`src/core/decorators/`)
-- 使用dpdm.js檢查是否存在循環引用問題(circular dependency)
+- 符合物件導向SOLID原則，並實現裝飾器、依賴注入等設計模式，使程式碼更簡潔，更容易擴充、修改、維護(寫法範例可參考`src/album/controller.ts`, 裝飾器實作細節位於`src/core/decorators/`)
+- 使用dpdm檢查循環引用問題(circular dependency)
 - RESTful風格的API端點
 - 對功能性函式撰寫單元測試(`src/core/utils.spec.ts`, `src/auth/utils.spec.ts`)
-- 使用helmet.js對Response Headers做基礎安全設定
+- 使用helmet對Response Headers做基礎安全設定
 - 使用express-rate-limit保護API端點防止DDoS攻擊
-- 使用Drizzle ORM，在保證type safe的前提下，以接近SQL語法的方式操作資料庫(可參考`src/album/service.ts`)
+- 使用Drizzle ORM，100% type safe，以接近原生SQL的語法操作資料庫(可參考`src/album/service.ts`)
 - 以Passport.js實作的登入註冊系統(實作細節位於`src/auth/authenticator.ts`)
 - 使用Redis作為SessionStore
 - 實現串流程式設計，最大化效能，也省去須建立暫時檔案再刪除的多餘操作
