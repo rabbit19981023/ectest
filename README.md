@@ -1,6 +1,6 @@
 # Gallery RESTful API Service
 
-此專案起初是為了應徵某軟體公司的後端測試題目，然而該職缺很快就關閉了。於是決定來挑戰自己，將開發好的專案進行全面重構，採用將成為ECMAScript標準的裝飾器語法(目前已進入stage 3，且從TypeScript 5開始原生支援，詳情可見[tc39](https://github.com/tc39/proposal-decorators))，並應用各種開發和設計原則，在合理範圍內確保高水準的專案架構、程式碼品質和可讀性，同時也使得程式碼更容易擴充、修改和維護。
+此專案起初是應徵某軟體公司時，主管開出的後端測試題目，然而該職缺很快就關閉了。眼見專案已幾乎開發完成，於是心想那不如來挑戰一下自己，將開發好的專案進行全面重構，採用將成為ECMAScript標準的裝飾器語法(目前已進入stage 3，且從TypeScript 5開始原生支援，詳情可見[tc39](https://github.com/tc39/proposal-decorators))，並應用各種開發觀念和設計原則，在合理範圍內確保高品質的專案/程式碼架構、可讀性和可測試性，同時也使得程式碼更容易擴充、修改和維護。
 
 題目大致上為：開發一個管理使用者相簿的後端API服務，題目中所有必要、加分項目皆已完成。
 
@@ -26,6 +26,9 @@
   - 允許使用者一次下載相簿裡的所有相片，並一邊壓縮檔案一邊將結果串流給使用者下載(可參考`src/photo/download/`)
 - 在新增相片時，允許使用者一次上傳多張相片，並使用批次寫入增進資料庫效能
 - 實作簡易Logger、http-logging(`src/core/logger.ts`, `src/middlewares/http-logging.ts`)
+
+> 限制：可惜的是，目前ECMAScript標準的裝飾器支援度可說是相當不好，現階段如果想在專案中使用裝飾器模式，建議還是先暫時使用`reflect-metadata`套件，並啟用`experimentalDecorators`, `emitDecoratorMetadata`等tsconfig設定進行開發，待支援度變得較完善時，再修改底層實作細節即可，開發好的原始碼甚至不須任何變動即可完成改版！
+
 
 ## Usage
 
