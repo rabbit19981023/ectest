@@ -6,9 +6,8 @@
 
 - 為測試自己的真實能力，100%獨立開發，整個過程**無使用**任何AI工具，包含但不限於：ChatGPT、Github Copilot等
 - 使用docker提供一致、可進版控、開箱即用的系統環境，包含：正式環境(express)、開發環境(express, postgres, redis)
-- 100% 使用ES6+語法
-- 100% TypeScript, 並適時運用泛型，使程式更嚴謹且靈活(可參考`src/core/utils.ts`)
-- 使用幾乎最嚴格的tsconfig規則，並搭配eslint/prettier，確保程式碼品質與格式一致
+- 100% TypeScript、 ES6+語法，並適時運用泛型，使程式更嚴謹且靈活(可參考`src/core/utils.ts`)
+- 啟用幾乎最嚴格的tsconfig規則，並搭配eslint/prettier，確保程式碼品質與一致的格式
 - 符合物件導向SOLID原則，並實現裝飾器、依賴注入等設計模式，使程式碼更簡潔，更容易擴充、修改、維護(寫法範例可參考`src/album/controller.ts`, 裝飾器實作細節位於`src/core/decorators/`)
 - 使用dpdm檢查循環引用問題(circular dependency)
 - RESTful風格的API端點
