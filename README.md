@@ -7,26 +7,16 @@
 題目大致上為：開發一個管理使用者相簿的後端 API 服務，題目中所有必要、加分項目皆已完成。
 
 - 為測試自己的真實能力，100% 獨立開發，整個過程**無使用**任何 AI 工具
-- 使用 docker 提供一致、可進版控、開箱即用的系統環境 ( express, postgres, redis )
-- 100% TypeScript、 ES6+ 語法，並適時運用泛型，使程式更嚴謹且靈活 ( 可參考`src/core/utils.ts` )
 - 啟用幾乎最嚴格的 tsconfig 規則，並搭配 eslint/prettier，確保程式碼品質與一致的格式
 - 符合物件導向 SOLID 原則，並實現裝飾器、依賴注入等設計模式，使程式碼更簡潔，更容易擴充、修改、維護 ( 寫法範例可參考`src/album/controller.ts`, 裝飾器實作細節位於`src/core/decorators/` )
-- RESTful 風格的 API 端點
 - 使用 dpdm 檢查循環引用問題 ( circular dependency )
 - 撰寫單元測試 ( `src/core/utils.spec.ts`, `src/auth/utils.spec.ts` )
-- 使用 helmet 對 Response Headers 做基礎資安設定
-- 使用 express-rate-limit 保護 API 端點防止 DDoS 攻擊
 - 使用 Drizzle ORM，100% type safe，以接近原生 SQL 的語法操作資料庫 ( 可參考`src/album/service.ts` )
 - 以 Passport.js 實作的登入註冊系統 ( 實作細節位於`src/auth/authenticator.ts` )
-- 使用 Redis 作為 SessionStore
 - 實現串流程式設計，不須建立暫時檔案，最大化效能
   - 實現 Buffer 與 Stream 機制 ( 可參考`src/photo/upload-parser.ts` )
   - 允許一邊壓縮相簿裡的所有相片，一邊串流回客戶端下載 ( 可參考`src/photo/download/` )
   - 允許一次上傳多張相片，批次寫入資料庫提昇效能
-- 實作簡易 Logger、http-logging ( `src/core/logger.ts`, `src/middlewares/http-logging.ts` )
-
-> 限制：可惜的是，目前 ECMAScript 標準的裝飾器支援度可說是相當不好，現階段如果想在專案中寫裝飾器，建議還是使用諸如 Nest.js 等成熟的框架 / 套件，或先暫時使用`reflect-metadata`套件，並啟用`experimentalDecorators`, `emitDecoratorMetadata`等 tsconfig 設定進行開發，待支援度變得較完善時，再修改底層實作細節即可，開發好的原始碼甚至不須任何變動即可完成改版！
-
 
 ## Usage
 
