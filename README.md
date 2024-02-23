@@ -2,19 +2,18 @@
 
 ![cover](./github_assets/cover.png)
 
-此專案起初是應徵某軟體公司時，主管開出的後端測試題目，然而該職缺很快就關閉了。眼見專案已幾乎開發完成，於是心想那不如來挑戰一下自己，將專案進行全面重構，採用將成為 ECMAScript 標準的裝飾器語法，並應用各種開發觀念和設計原則，在合理範圍內確保高品質的專案 / 程式碼架構，同時也使程式碼變得更簡潔、更容易擴充、修改、維護。
+此專案起初是應徵某軟體公司時，主管開出的後端測試題目，然而該職缺很快就關閉了。眼見專案已幾乎開發完成，於是心想那不如來挑戰一下自己，將專案進行全面重構，採用將成為 ECMAScript 標準的裝飾器語法，並應用各種開發觀念和設計原則，在合理範圍內確保高品質的專案 / 程式碼架構，同時也使程式碼變得更容易閱讀、擴充、維護、除錯。
 
 題目大致上為：開發一個管理使用者相簿的後端 API 服務，題目中所有必要、加分項目皆已完成。
 
-- 為測試自己的真實能力，100% 獨立開發，整個過程**無使用**任何 AI 工具
 - 啟用幾乎最嚴格的 tsconfig 規則，並搭配 eslint/prettier，確保程式碼品質與一致的格式
-- 符合物件導向 SOLID 原則，並實現裝飾器、依賴注入等設計模式，使程式碼更簡潔，更容易擴充、修改、維護 ( 寫法範例可參考`src/album/controller.ts`, 裝飾器實作細節位於`src/core/decorators/` )
+- 符合物件導向 SOLID 原則，並實現裝飾器、依賴注入等設計模式，使程式碼更容易閱讀、擴充、維護、除錯 ( 寫法範例可參考`src/album/controller.ts`, 裝飾器實作細節位於`src/core/decorators/` )
+- 使用 Docker 提供正式 / 開發環境
 - 使用 dpdm 檢查循環引用問題 ( circular dependency )
 - 撰寫單元測試 ( `src/core/utils.spec.ts`, `src/auth/utils.spec.ts` )
 - 使用 Drizzle ORM，100% type safe，以接近原生 SQL 的語法操作資料庫 ( 可參考`src/album/service.ts` )
 - 以 Passport.js 實作的登入註冊系統 ( 實作細節位於`src/auth/authenticator.ts` )
 - 實現串流程式設計，不須建立暫時檔案，最大化效能
-  - 實現 Buffer 與 Stream 機制 ( 可參考`src/photo/upload-parser.ts` )
   - 允許一邊壓縮相簿裡的所有相片，一邊串流回客戶端下載 ( 可參考`src/photo/download/` )
   - 允許一次上傳多張相片，批次寫入資料庫提昇效能
 
